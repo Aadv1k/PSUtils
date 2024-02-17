@@ -1,6 +1,20 @@
-$Prefix = "[RedditImageMiner]"
-$OutputDir = $args[1] ?? ".\data" 
+<#
+.SYNOPSIS
+    Get-RedditImage download/mine images including galleries provided a piped JSON string or a FilePath 
 
+.PARAMETER FilePath
+    Specifies the path to the JSON file containing Reddit data. This parameter is optional.
+
+.PARAMETER OutputDir
+    Specifies the directory where downloaded images will be saved. This parameter is optional. If not provided, images will be saved to a directory named "data" in the current location.
+#>
+
+param (
+    [string]$FilePath,
+    [string]$OutputDir = ".\data"
+)
+
+$Prefix = "[RedditImageMiner]"
 $RawData = ""
 
 if ($input) {
