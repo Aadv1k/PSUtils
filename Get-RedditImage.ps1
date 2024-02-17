@@ -5,13 +5,13 @@
 .PARAMETER FilePath
     Specifies the path to the JSON file containing Reddit data. This parameter is optional.
 
-.PARAMETER OutputDir
+.PARAMETER OutDir
     Specifies the directory where downloaded images will be saved. This parameter is optional. If not provided, images will be saved to a directory named "data" in the current location.
 #>
 
 param (
     [string]$FilePath,
-    [string]$OutputDir = ".\data"
+    [string]$OutDir = ".\data"
 )
 
 $Prefix = "[RedditImageMiner]"
@@ -33,7 +33,7 @@ if ($input) {
     exit 1
 }
 
-New-Item -Name $OutputDir -ItemType "directory" -Force > $null
+New-Item -Name $OutDir -ItemType "directory" -Force > $null
 
 try {
     $FileData = $RawData | ConvertFrom-Json
@@ -48,7 +48,7 @@ $FileData.data.children | ForEach-Object {
     $IsGallery = $Data.is_gallery -eq $true
 
     if ($IsGallery) {
-        $ParentDirectory = "$OutputDir\$($Data.name)"
+        $ParentDirectory = "$OutDir\$($Data.name)"
 
         if (!(Test-Path -Path $ParentDirectory -PathType Container)) {
             mkdir $ParentDirectory -ErrorAction Continue > $null
@@ -68,7 +68,7 @@ $FileData.data.children | ForEach-Object {
     } else {
         $ImageURL = $Data.url_overridden_by_dest
         $IsFileURL = $Data.url_overridden_by_dest -match "[^/]+$"
-        $ImageFilePath = "$OutputDir\" + $Matches[0]
+        $ImageFilePath = "$OutDir\" + $Matches[0]
 
         # Make sure only URLs ending with an extension end up here
         if ($ImageURL -match "\.[a-zA-Z0-9]+$") {
