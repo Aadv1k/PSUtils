@@ -1,6 +1,27 @@
 <#
 .SYNOPSIS
-    Get-RedditImage download/mine images including galleries provided a piped JSON string or a FilePath 
+    A script to images (including galleries) given (sub)reddit JSON data. 
+    See: https://www.reddit.com/dev/api/
+
+.LINK
+    https://github.com/aadv1k/PSUtils
+    
+.INPUTS
+    Expects a JSON String to be Piped into the script.
+
+.OUTPUTS
+    Produces a directory (`.\data` by default) and places the images in it
+
+.EXAMPLE
+    Invoke-WebRequest "https://reddit.com/r/wallpapers/top.json?limit=5" | Get-RedditImage -OutDir wallpapers
+    j
+    Get top 5 wallpapers from r/wallpapers
+
+
+.EXAMPLE
+    Get-RedditImage -FilePath .\data.json -OutDir dataisbeautiful
+
+    Get newest visualizations from r/dataisbeautiful
 
 .PARAMETER FilePath
     Specifies the path to the JSON file containing Reddit data. This parameter is optional.
@@ -17,8 +38,10 @@ param (
 $Prefix = "[RedditImageMiner]"
 $RawData = ""
 
-if ($input) {
-  $RawData = $input -join "`n"
+$PipedInputAsStr = $input -join "`n"
+
+if ($PipedInputAsStr.Length -gt 0) {
+  $RawData = $PipedInputAsStr
 } elseif ($args.Length -gt 0) {
     $FilePath = $args[0]
 
